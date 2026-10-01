@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#173c32">
+    <title>SubRescue | Keep ahead of renewals</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#main" aria-label="SubRescue home">
+        <span class="brand-mark" aria-hidden="true">S</span>
+        <span>subrescue</span>
+      </a>
+      <div class="topbar-right">
+        <span class="local-label"><span class="status-dot"></span>Saved on this device</span>
+        <button class="button button-primary top-add" type="button" data-open-form>＋ <span>Add commitment</span></button>
+      </div>
+    </header>
+
+    <main id="main" class="page-shell">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">YOUR RECURRING SPEND</p>
+          <h1 id="page-title">Stay ahead of<br><span>the next debit.</span></h1>
+          <p class="intro-copy">One clear view of what is coming up, and when.</p>
+        </div>
+        <div class="intro-mark" aria-hidden="true"><span>₹</span><i></i><b></b></div>
+      </section>
+
+      <section class="summary-strip" aria-label="Upcoming summary">
+        <div class="summary-item">
+          <span class="summary-label">Due in the next 30 days</span>
+          <strong id="total-due">₹0</strong>
+          <span class="summary-note">Amounts grouped by currency</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item summary-count">
+          <span class="summary-label">Coming up</span>
+          <strong><span id="upcoming-count">0</span><small> commitments</small></strong>
+          <span class="summary-note">Across your active list</span>
+        </div>
+        <div class="summary-date"><span id="today-label"></span><span class="date-spark" aria-hidden="true">✳</span></div>
+      </section>
+
+      <section class="commitments-section" aria-labelledby="list-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">YOUR LIST</p>
+            <h2 id="list-title">Upcoming commitments</h2>
+          </div>
+          <label class="search-box">
+            <span class="sr-only">Search commitments</span>
+            <span aria-hidden="true">⌕</span>
+            <input id="search-input" type="search" placeholder="Find a commitment" autocomplete="off">
+          </label>
+        </div>
+
+        <div id="reminder-notice" class="reminder-notice" role="status">
+          <span class="notice-icon" aria-hidden="true">◷</span>
+          <p><strong>Reminders are checked while this page is open.</strong> Browser alerts are best-effort; they are not sent in the background.</p>
+          <button id="enable-alerts" class="text-button" type="button">Enable alerts</button>
+        </div>
+
+        <div id="commitment-list" class="commitment-list" aria-live="polite"></div>
+        <div id="empty-state" class="empty-state" hidden>
+          <div class="empty-art" aria-hidden="true"><span>₹</span><i></i></div>
+          <h3>Your next renewal starts here.</h3>
+          <p>Add a subscription or recurring order to see its date and amount in one place.</p>
+          <button class="button button-dark" type="button" data-open-form>＋ Add your first commitment</button>
+          <button id="load-example" class="text-button example-button" type="button">Preview with example entries</button>
+        </div>
+        <p id="no-results" class="no-results" hidden>No commitments match that search.</p>
+        <p class="privacy-note"><span aria-hidden="true">◉</span> Your list stays in this browser. No bank or payment details are collected.</p>
+      </section>
+    </main>
+
+    <dialog id="commitment-dialog" class="commitment-dialog" aria-labelledby="dialog-title">
+      <form id="commitment-form" method="dialog">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">YOUR RECURRING SPEND</p>
+            <h2 id="dialog-title">Add a commitment</h2>
+          </div>
+          <button class="close-button" type="button" aria-label="Close form" data-close-form>×</button>
+        </div>
+        <input id="entry-id" type="hidden">
+        <label class="field full-field">Name
+          <input id="entry-name" name="name" maxlength="60" placeholder="e.g. Music subscription" required>
+        </label>
+        <label class="field full-field">Provider or store <span class="optional">Optional</span>
+          <input id="entry-provider" name="provider" maxlength="50" placeholder="e.g. Spotify, Amazon">
+        </label>
+        <div class="field-row">
+          <label class="field">Amount
+            <input id="entry-amount" name="amount" type="number" min="0.01" max="100000000" step="0.01" placeholder="0.00" required>
+          </label>
+          <label class="field">Currency
+            <select id="entry-currency" name="currency">
+              <option value="INR">INR · ₹</option>
+              <option value="USD">USD · $</option>
+              <option value="EUR">EUR · €</option>
+              <option value="GBP">GBP · £</option>
+            </select>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">Next date
+            <input id="entry-date" name="date" type="date" required>
+          </label>
+          <label class="field">Repeats
+            <select id="entry-cadence" name="cadence">
+              <option value="weekly">Weekly</option>
+              <option value="monthly" selected>Monthly</option>
+              <option value="quarterly">Every 3 months</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">Remind me
+            <select id="entry-reminder" name="reminderDays">
+              <option value="5" selected>5 days before</option>
+              <option value="7">7 days before</option>
+              <option value="14">14 days before</option>
+              <option value="30">30 days before</option>
+            </select>
+          </label>
+          <label class="field">Manage link <span class="optional">Optional</span>
+            <input id="entry-link" name="manageUrl" type="url" placeholder="https://">
+          </label>
+        </div>
+        <p class="form-footnote">SubRescue tracks the date you enter. Update it if your provider changes the renewal schedule.</p>
+        <div class="dialog-actions">
+          <button class="button button-quiet" type="button" data-close-form>Cancel</button>
+          <button class="button button-dark" type="submit">Save commitment</button>
+        </div>
+      </form>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
